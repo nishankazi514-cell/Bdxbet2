@@ -1,9 +1,11 @@
-from flask import Flask, request, jsonify, session, send_from_directory
+from flask import Flask, request, jsonify, session, send_from_directory, abort, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 import secrets
 import re
+import tempfile
+from html import escape
 from functools import wraps
 
 # =========================
@@ -43,7 +45,24 @@ app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 30  # 30 days
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 os.makedirs(TEMPLATES_DIR, exist_ok=True)
 
-DB_FILE = os.path.join(BASE_DIR, "users.db")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+
+
+def pick_db_path():
+    # DB_PATH env > app.py এর পাশে users.db > (read-only হলে) temp folder
+    env = os.environ.get("DB_PATH")
+    if env:
+        return env
+    path = os.path.join(BASE_DIR, "users.db")
+    try:
+        with open(path, "a"):
+            pass
+        return path
+    except OSError:
+        return os.path.join(tempfile.gettempdir(), "users.db")
+
+
+DB_FILE = pick_db_path()
 
 PHONE_REGEX = re.compile(r"^01[0-9]{9}$")
 
@@ -146,18 +165,77 @@ def required(fn):
 # MAIN WEBSITE
 # =========================
 
-def serve_page(filename):
-    # templates folder, তারপর app.py এর পাশের folder, তারপর static - সব জায়গায় খুঁজবে
-    for folder in (TEMPLATES_DIR, BASE_DIR, os.path.join(BASE_DIR, "static")):
+SEARCH_DIRS = (TEMPLATES_DIR, BASE_DIR, STATIC_DIR)
+
+# শুধু এই ধরনের file browser কে দেওয়া হবে (app.py, users.db, .secret_key কখনো না)
+ALLOWED_EXT = {
+    ".html", ".css", ".js", ".png", ".jpg", ".jpeg", ".gif", ".svg",
+    ".webp", ".ico", ".mp3", ".wav", ".ogg", ".woff", ".woff2", ".ttf",
+}
+
+
+def find_file(filename):
+    """templates, app.py এর পাশের folder, static - সব জায়গায় খোঁজে (case-insensitive সহ)"""
+    filename = str(filename).replace("\\", "/").lstrip("/")
+    if not filename:
+        return None, None
+
+    for folder in SEARCH_DIRS:
         if os.path.isfile(os.path.join(folder, filename)):
-            return send_from_directory(folder, filename)
-    return (
-        f"{filename} পাওয়া যায়নি। File টা templates/ folder এ আছে কিনা দেখুন।",
-        404,
+            return folder, filename
+
+    if "/" not in filename:
+        low = filename.lower()
+        for folder in SEARCH_DIRS:
+            if not os.path.isdir(folder):
+                continue
+            for f in os.listdir(folder):
+                if f.lower() == low and os.path.isfile(os.path.join(folder, f)):
+                    return folder, f
+
+    return None, None
+
+
+def list_html_files():
+    found = []
+    for folder in SEARCH_DIRS:
+        if os.path.isdir(folder):
+            for f in sorted(os.listdir(folder)):
+                if f.lower().endswith(".html") and f not in found:
+                    found.append(f)
+    return found
+
+
+def serve_page(filename):
+    folder, name = find_file(filename)
+    if folder:
+        return send_from_directory(folder, name)
+
+    # index.html না থাকলে অন্য কোনো html file থাকলে সেটাই দেখাবে
+    if filename == "index.html":
+        others = [f for f in list_html_files() if f.lower() != "shuvoludo.html"]
+        if others:
+            folder, name = find_file(others[0])
+            if folder:
+                return send_from_directory(folder, name)
+
+    links = "".join(
+        f'<li><a href="/{escape(f)}">{escape(f)}</a></li>' for f in list_html_files()
+    ) or "<li>কোনো .html file পাওয়া যায়নি</li>"
+    page = (
+        "<!doctype html><meta charset='utf-8'>"
+        "<meta name='viewport' content='width=device-width,initial-scale=1'>"
+        "<body style='font-family:sans-serif;padding:20px'>"
+        f"<h2>{escape(filename)} পাওয়া যায়নি</h2>"
+        "<p>Server চলছে, কিন্তু এই file টা repo তে নেই। "
+        "<b>templates/</b> folder এ upload করুন।</p>"
+        f"<p>এখন যেসব html file আছে:</p><ul>{links}</ul></body>"
     )
-@app.route("/index.html")
+    return Response(page, status=404, mimetype="text/html")
+
 
 @app.route("/")
+@app.route("/index.html")
 def index():
     return serve_page("index.html")
 
@@ -165,6 +243,27 @@ def index():
 @app.route("/shuvoludo.html")
 def ludo():
     return serve_page("shuvoludo.html")
+
+
+@app.route("/healthz")
+def healthz():
+    return jsonify(ok=True)
+
+
+# অন্য সব page / css / js / image (যেমন /style.css)
+@app.route("/<path:filename>")
+def other_files(filename):
+    if filename.startswith("api/"):
+        return jsonify(success=False, message="Not found"), 404
+
+    ext = os.path.splitext(filename)[1].lower()
+    if ext not in ALLOWED_EXT:
+        abort(404)
+
+    folder, name = find_file(filename)
+    if not folder:
+        abort(404)
+    return send_from_directory(folder, name)
 
 
 # =========================
@@ -444,7 +543,10 @@ def find_user(uid):
 # DATABASE INITIALIZE
 # =========================
 
-init_db()
+try:
+    init_db()
+except Exception as e:
+    print("init_db error:", e)
 
 
 # =========================
@@ -456,4 +558,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 5000)),
         debug=False
-    )
+        )
