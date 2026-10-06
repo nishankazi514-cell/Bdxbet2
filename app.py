@@ -146,14 +146,25 @@ def required(fn):
 # MAIN WEBSITE
 # =========================
 
+def serve_page(filename):
+    # templates folder, তারপর app.py এর পাশের folder, তারপর static - সব জায়গায় খুঁজবে
+    for folder in (TEMPLATES_DIR, BASE_DIR, os.path.join(BASE_DIR, "static")):
+        if os.path.isfile(os.path.join(folder, filename)):
+            return send_from_directory(folder, filename)
+    return (
+        f"{filename} পাওয়া যায়নি। File টা templates/ folder এ আছে কিনা দেখুন।",
+        404,
+    )
+
+
 @app.route("/")
 def index():
-    return send_from_directory(TEMPLATES_DIR, "index.html")
+    return serve_page("index.html")
 
 
 @app.route("/shuvoludo.html")
 def ludo():
-    return send_from_directory(TEMPLATES_DIR, "shuvoludo.html")
+    return serve_page("shuvoludo.html")
 
 
 # =========================
@@ -445,4 +456,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 5000)),
         debug=False
-)
+    )
