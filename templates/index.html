@@ -1,1331 +1,1147 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BDXbet - Premium Dashboard</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!DOCTYPE html>  <html lang="bn">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>BDXbet - Premium Dashboard</title>  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  <style>  
+*{  
+ box-sizing:border-box;  
+ margin:0;  
+ padding:0;  
+ user-select:none  
+}  
+  
+body{  
+ background:#030712;  
+ font-family:'Segoe UI',system-ui,sans-serif;  
+ color:#fff;  
+ min-height:100vh;  
+ padding-bottom:80px;  
+ overflow-x:hidden  
+}  
+  
+.navbar{  
+ background:rgba(8,17,30,.98);  
+ border-bottom:1.5px solid rgba(224,130,29,.4);  
+ padding:12px 16px;  
+ display:flex;  
+ justify-content:space-between;  
+ align-items:center;  
+ position:sticky;  
+ top:0;  
+ z-index:100;  
+ backdrop-filter:blur(10px)  
+}  
+  
+.brand-area{  
+ display:flex;  
+ align-items:center;  
+ gap:10px  
+}  
+  
+.vip-badge{  
+ background:linear-gradient(45deg,#d4af37,#ffd700);  
+ color:#000;  
+ padding:3px 8px;  
+ border-radius:6px;  
+ font-weight:900;  
+ font-size:11px;  
+ box-shadow:0 0 10px rgba(212,175,55,.5)  
+}  
+  
+.brand-title{  
+ font-size:20px;  
+ font-weight:900;  
+ color:#fff;  
+ letter-spacing:.5px  
+}  
+  
+.brand-title span{  
+ color:#f29f1b  
+}  
+  
+.user-actions{  
+ display:flex;  
+ align-items:center;  
+ gap:10px  
+}  
+  
+.user-wallet{  
+ background:linear-gradient(135deg,rgba(242,159,27,.15),rgba(255,69,0,.15));  
+ border:1px solid #f29f1b;  
+ padding:6px 12px;  
+ border-radius:20px;  
+ font-size:13px;  
+ font-weight:bold;  
+ color:#ffd700;  
+ display:flex;  
+ align-items:center;  
+ gap:6px  
+}  
+  
+.auth-btn{  
+ background:#f29f1b;  
+ color:#000;  
+ border:none;  
+ padding:6px 14px;  
+ border-radius:20px;  
+ font-weight:800;  
+ font-size:12px;  
+ cursor:pointer;  
+ box-shadow:0 0 10px rgba(242,159,27,.4)  
+}  
+  
+.container{  
+ max-width:480px;  
+ margin:0 auto;  
+ padding:15px  
+}  
+  
+.notice-wrapper{  
+ background:rgba(15,23,42,.9);  
+ border-left:4px solid #f29f1b;  
+ border-radius:10px;  
+ padding:10px 14px;  
+ margin-bottom:15px;  
+ display:flex;  
+ align-items:center;  
+ gap:10px;  
+ overflow:hidden  
+}  
+  
+.notice-icon{  
+ color:#f29f1b;  
+ font-size:16px;  
+ animation:pulse 1.5s infinite  
+}  
+  
+.notice-text{  
+ font-size:13px;  
+ color:#e2e8f0;  
+ white-space:nowrap;  
+ animation:marquee 14s linear infinite  
+}  
+  
+@keyframes marquee{  
+ 0%{transform:translateX(100%)}  
+ 100%{transform:translateX(-100%)}  
+}  
+  
+@keyframes pulse{  
+ 0%,100%{transform:scale(1)}  
+ 50%{transform:scale(1.2)}  
+}  
+  
+.quick-wallet-actions{  
+ display:grid;  
+ grid-template-columns:1fr 1fr;  
+ gap:12px;  
+ margin-bottom:20px  
+}  
+  
+.wallet-btn{  
+ padding:12px;  
+ border-radius:12px;  
+ border:none;  
+ font-weight:800;  
+ font-size:14px;  
+ cursor:pointer;  
+ display:flex;  
+ align-items:center;  
+ justify-content:center;  
+ gap:8px  
+}  
+  
+.btn-deposit{  
+ background:linear-gradient(135deg,#10b981,#059669);  
+ color:#fff;  
+ box-shadow:0 4px 15px rgba(16,185,129,.4)  
+}  
+  
+.btn-withdraw{  
+ background:linear-gradient(135deg,#f59e0b,#d97706);  
+ color:#fff;  
+ box-shadow:0 4px 15px rgba(245,158,11,.4)  
+}  
+  
+.promo-card{  
+ background:linear-gradient(135deg,#2563eb,#1d4ed8);  
+ border-radius:16px;  
+ padding:16px;  
+ margin-bottom:20px;  
+ position:relative;  
+ overflow:hidden;  
+ border:1px solid rgba(255,255,255,.15)  
+}  
+  
+.promo-tag{  
+ background:#f59e0b;  
+ color:#000;  
+ font-size:10px;  
+ font-weight:900;  
+ padding:2px 8px;  
+ border-radius:10px;  
+ text-transform:uppercase;  
+ display:inline-block;  
+ margin-bottom:6px  
+}  
+  
+.promo-title{  
+ font-size:16px;  
+ font-weight:900;  
+ margin-bottom:4px  
+}  
+  
+.promo-desc{  
+ font-size:11px;  
+ color:#dbeafe  
+}  
+  
+.filter-chips{  
+ display:flex;  
+ gap:8px;  
+ overflow-x:auto;  
+ margin-bottom:12px;  
+ padding-bottom:4px  
+}  
+  
+.chip{  
+ background:rgba(255,255,255,.05);  
+ border:1px solid rgba(255,255,255,.1);  
+ padding:6px 14px;  
+ border-radius:20px;  
+ font-size:12px;  
+ font-weight:bold;  
+ color:#94a3b8;  
+ cursor:pointer;  
+ white-space:nowrap  
+}  
+  
+.chip.active{  
+ background:#f29f1b;  
+ color:#000;  
+ border-color:#f29f1b  
+}  
+  
+.section-card{  
+ background:rgba(10,20,36,.85);  
+ border:1px solid rgba(224,130,29,.3);  
+ border-radius:20px;  
+ padding:18px;  
+ margin-bottom:20px  
+}  
+  
+.section-title{  
+ font-size:13px;  
+ color:#f29f1b;  
+ text-transform:uppercase;  
+ letter-spacing:1px;  
+ font-weight:800;  
+ display:flex;  
+ align-items:center;  
+ gap:8px  
+}  
+  
+.game-grid{  
+ display:grid;  
+ grid-template-columns:repeat(2,1fr);  
+ gap:12px  
+}  
+  
+.game-card{  
+ background:rgba(255,255,255,.03);  
+ border:1px solid rgba(242,159,27,.2);  
+ border-radius:16px;  
+ padding:14px 10px;  
+ text-align:center;  
+ display:flex;  
+ flex-direction:column;  
+ align-items:center;  
+ justify-content:space-between  
+}  
+  
+.game-card i{  
+ font-size:32px;  
+ color:#f29f1b;  
+ margin-bottom:8px  
+}  
+  
+.game-title{  
+ font-size:14px;  
+ font-weight:800;  
+ color:#fff;  
+ margin-bottom:10px  
+}  
+  
+.play-btn{  
+ width:100%;  
+ background:linear-gradient(135deg,#f29f1b,#d97706);  
+ color:#000;  
+ border:none;  
+ border-radius:20px;  
+ padding:6px 0;  
+ font-size:11px;  
+ font-weight:900;  
+ cursor:pointer;  
+ display:flex;  
+ align-items:center;  
+ justify-content:center;  
+ gap:4px  
+}  
+  
+.jackpot-box{  
+ background:linear-gradient(135deg,#0e1a2e,#172a46);  
+ border:1.5px solid #ffd700;  
+ border-radius:18px;  
+ padding:18px;  
+ text-align:center;  
+ margin-bottom:20px  
+}  
+  
+.jackpot-title{  
+ font-size:13px;  
+ color:#ffd700;  
+ font-weight:900;  
+ letter-spacing:2px  
+}  
+  
+.jackpot-amount{  
+ font-size:28px;  
+ font-weight:900;  
+ color:#00ff88;  
+ margin:6px 0  
+}  
+  
+.winner-row{  
+ display:flex;  
+ justify-content:space-between;  
+ align-items:center;  
+ padding:10px 0;  
+ border-bottom:1px solid rgba(255,255,255,.05);  
+ font-size:13px  
+}  
+  
+.winner-win{  
+ color:#00ff88;  
+ font-weight:bold  
+}  
+  
+.bottom-nav{  
+ position:fixed;  
+ bottom:0;  
+ left:0;  
+ right:0;  
+ background:#08111d;  
+ border-top:1px solid rgba(224,130,29,.3);  
+ display:flex;  
+ justify-content:space-around;  
+ padding:10px 0;  
+ z-index:100  
+}  
+  
+.nav-link{  
+ color:#64748b;  
+ text-decoration:none;  
+ font-size:11px;  
+ display:flex;  
+ flex-direction:column;  
+ align-items:center;  
+ gap:4px;  
+ cursor:pointer  
+}  
+  
+.nav-link.active{  
+ color:#f29f1b  
+}  
+  
+.modal-overlay{  
+ position:fixed;  
+ top:0;  
+ left:0;  
+ width:100%;  
+ height:100%;  
+ background:rgba(0,0,0,.85);  
+ display:flex;  
+ justify-content:center;  
+ align-items:center;  
+ z-index:1000;  
+ opacity:0;  
+ visibility:hidden;  
+ transition:all .3s ease;  
+ padding:20px;  
+ backdrop-filter:blur(5px)  
+}  
+  
+.modal-overlay.active{  
+ opacity:1;  
+ visibility:visible  
+}  
+  
+.modal-card{  
+ background:#0b1727;  
+ border:1.5px solid #f29f1b;  
+ border-radius:20px;  
+ width:100%;  
+ max-width:380px;  
+ padding:20px;  
+ position:relative  
+}  
+  
+.modal-close{  
+ position:absolute;  
+ top:14px;  
+ right:16px;  
+ color:#94a3b8;  
+ font-size:20px;  
+ cursor:pointer  
+}  
+  
+.modal-title{  
+ font-size:16px;  
+ font-weight:800;  
+ color:#f29f1b;  
+ margin-bottom:15px;  
+ text-align:center  
+}  
+  
+.form-group{  
+ margin-bottom:12px  
+}  
+  
+.form-group label{  
+ display:block;  
+ font-size:11px;  
+ color:#94a3b8;  
+ margin-bottom:4px  
+}  
+  
+.form-group input,  
+.form-group select{  
+ width:100%;  
+ background:rgba(255,255,255,.05);  
+ border:1px solid rgba(255,255,255,.15);  
+ padding:10px;  
+ border-radius:10px;  
+ color:#fff;  
+ font-size:13px;  
+ outline:none  
+}  
+  
+.form-group select option{  
+ background:#0b1727;  
+ color:#fff  
+}  
+  
+.modal-submit-btn{  
+ width:100%;  
+ background:linear-gradient(135deg,#10b981,#059669);  
+ border:none;  
+ color:#fff;  
+ padding:10px;  
+ border-radius:10px;  
+ font-weight:bold;  
+ margin-top:10px;  
+ cursor:pointer  
+}  
+  
+.game-canvas-area{  
+ background:#040914;  
+ border-radius:12px;  
+ height:180px;  
+ display:flex;  
+ flex-direction:column;  
+ align-items:center;  
+ justify-content:center;  
+ position:relative;  
+ overflow:hidden;  
+ border:1px solid rgba(255,255,255,.1);  
+ margin-bottom:15px  
+}  
+  
+.plane-anim{  
+ font-size:35px;  
+ color:#ef4444;  
+ position:absolute;  
+ bottom:20px;  
+ left:20px;  
+ animation:flyPlane 3s infinite ease-in-out  
+}  
+  
+@keyframes flyPlane{  
+ 0%{  
+  transform:translate(0,0) rotate(0)  
+ }  
+ 50%{  
+  transform:translate(120px,-70px) rotate(-15deg)  
+ }  
+ 100%{  
+  transform:translate(220px,-130px) rotate(-25deg)  
+ }  
+}  
+  
+.multiplier-text{  
+ font-size:32px;  
+ font-weight:900;  
+ color:#00ff88;  
+ z-index:2  
+}  
+</style>  </head>  <body>  <div class="navbar">  
+ <div class="brand-area">  
+  <span class="vip-badge">VIP 1</span>  
+  <div class="brand-title">BDX<span>bet</span></div>  
+ </div>   <div class="user-actions">  
+  <div class="user-wallet">  
+   <i class="fa-solid fa-wallet"></i>  
+   <span id="userBalance">৳ 0.00</span>  
+  </div>    <button class="auth-btn" id="navAuthBtn" onclick="handleAccountClick()">  
+   লগইন  
+  </button>  
+ </div>  
+</div>  <div class="container">   <div class="notice-wrapper">  
+  <i class="fa-solid fa-bullhorn notice-icon"></i>  
+  <div class="notice-text">  
+   BDXbet-এ স্বাগতম! বিকাশ, নগদ বা রকেটের মাধ্যমে দ্রুত ডিপোজিট করে আজই গেম খেলুন।  
+  </div>  
+ </div>   <div class="quick-wallet-actions">  
+  <button class="wallet-btn btn-deposit" onclick="openModal('depositModal')">  
+   <i class="fa-solid fa-circle-plus"></i>  
+   DEPOSIT  
+  </button>    <button class="wallet-btn btn-withdraw" onclick="openModal('withdrawModal')">  
+   <i class="fa-solid fa-money-bill-transfer"></i>  
+   WITHDRAW  
+  </button>  
+ </div>   <div class="promo-card">  
+  <span class="promo-tag">WELCOME BONUS</span>  
+  <div class="promo-title">100% Cash Match Bonus!</div>  
+  <div class="promo-desc">  
+   আজই প্রথম ডিপোজিটে পান সমপরিমাণ ফ্রি বোনাস ক্যাশ।  
+  </div>  
+ </div>   <div class="section-card">    <div class="section-title" style="margin-bottom:10px;">  
+   <i class="fa-solid fa-fire" style="color:#ff4500;"></i>  
+   POPULAR CATEGORIES  
+  </div>    <div class="filter-chips">  
+   <div class="chip active" onclick="filterCategory('all',this)">  
+    All Games  
+   </div>     <div class="chip" onclick="filterCategory('sports',this)">  
+    Sports  
+   </div>     <div class="chip" onclick="filterCategory('betting',this)">  
+    Betting  
+   </div>     <div class="chip" onclick="filterCategory('slots',this)">  
+    Slots  
+   </div>  
+  </div>    <div class="game-grid" id="gameGrid">     <div class="game-card" data-category="sports">  
+    <i class="fa-solid fa-baseball-bat-ball"></i>  
+    <div class="game-title">Cricket</div>  
+    <button class="play-btn" onclick="startPlayGame('Cricket')">  
+     <i class="fa-solid fa-play"></i>  
+     গেম খেলুন  
+    </button>  
+   </div>     <div class="game-card" data-category="sports">  
+    <i class="fa-solid fa-futbol"></i>  
+    <div class="game-title">Football</div>  
+    <button class="play-btn" onclick="startPlayGame('Football')">  
+     <i class="fa-solid fa-play"></i>  
+     গেম খেলুন  
+    </button>  
+   </div>     <div class="game-card" data-category="slots">  
+    <i class="fa-solid fa-gamepad"></i>  
+    <div class="game-title">Ludo</div>  
+    <button class="play-btn" onclick="window.location.href='shuvoludo.html'">  
+     <i class="fa-solid fa-play"></i>  
+     গেম খেলুন  
+    </button>  
+   </div>     <div class="game-card" data-category="betting">  
+    <i class="fa-solid fa-plane-departure"></i>  
+    <div class="game-title">Aviator</div>  
+    <button class="play-btn" onclick="startPlayGame('Aviator')">  
+     <i class="fa-solid fa-play"></i>  
+     গেম খেলুন  
+    </button>  
+   </div>    </div>  
+ </div>   <div class="jackpot-box">  
+  <div class="jackpot-title">  
+   🔥 DAILY MEGA JACKPOT 🔥  
+  </div>    <div class="jackpot-amount" id="jackpot">  
+   ৳ 1,450,720  
+  </div>    <div style="font-size:11px;color:#94a3b8;">  
+   Draw starts in: 04h 12m 30s  
+  </div>  
+ </div>   <div class="section-card">    <div class="section-title" style="margin-bottom:12px;">  
+   <i class="fa-solid fa-trophy" style="color:#ffd700;"></i>  
+   LIVE WINNERS FEED  
+  </div>    <div class="winner-row">  
+   <div>  
+    <i class="fa-solid fa-circle-user"></i>  
+    User ***9012  
+   </div>     <div class="winner-win">  
+    + ৳ 5,400  
+   </div>  
+  </div>    <div class="winner-row">  
+   <div>  
+    <i class="fa-solid fa-circle-user"></i>  
+    User ***4431  
+   </div>     <div class="winner-win">  
+    + ৳ 12,000  
+   </div>  
+  </div>   </div>  
+</div>  <div class="bottom-nav">   <div class="nav-link active">  
+  <i class="fa-solid fa-house"></i>  
+  <span>Home</span>  
+ </div>   <div class="nav-link" onclick="startPlayGame('All Games')">  
+  <i class="fa-solid fa-gamepad"></i>  
+  <span>Games</span>  
+ </div>   <div class="nav-link" onclick="openModal('supportModal')">  
+  <i class="fa-solid fa-headset"></i>  
+  <span>Support</span>  
+ </div>   <div class="nav-link" onclick="handleAccountClick()">  
+  <i class="fa-solid fa-user"></i>  
+  <span>Account</span>  
+ </div>  </div>  <!-- LOGIN -->  <div class="modal-overlay" id="authModal">   <div class="modal-card">  <i class="fa-solid fa-xmark modal-close"  
+onclick="closeModal('authModal')"></i>
 
-<style>
-*{
- box-sizing:border-box;
- margin:0;
- padding:0;
- user-select:none
-}
+  <div class="modal-title">  
+   ইউজার লগইন / রেজিস্ট্রেশন  
+  </div>    <div class="form-group">  
+   <label>মোবাইল নম্বর</label>  
+   <input type="text"  
+          id="loginPhone"  
+          placeholder="017XXXXXXXX">  
+  </div>    <div class="form-group">  
+   <label>পাসওয়ার্ড</label>  
+   <input id="loginPassword"  
+          type="password"  
+          placeholder="******">  
+  </div>  <button class="modal-submit-btn"  
+onclick="submitLogin()">
+লগইন করুন
+</button>
 
-body{
- background:#030712;
- font-family:'Segoe UI',system-ui,sans-serif;
- color:#fff;
- min-height:100vh;
- padding-bottom:80px;
- overflow-x:hidden
-}
+ </div>  
+</div>  <!-- PROFILE -->  <div class="modal-overlay" id="profileModal">   <div class="modal-card">  <i class="fa-solid fa-xmark modal-close"  
+onclick="closeModal('profileModal')"></i>
 
-.navbar{
- background:rgba(8,17,30,.98);
- border-bottom:1.5px solid rgba(224,130,29,.4);
- padding:12px 16px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- position:sticky;
- top:0;
- z-index:100;
- backdrop-filter:blur(10px)
-}
+  <div class="modal-title" style="color:#00ff88;">  
+   <i class="fa-solid fa-user-shield"></i>  
+   ইউজার প্রোফাইল  
+  </div>    <div style="text-align:center;padding:10px 0;">  <i class="fa-solid fa-circle-user"  
+style="font-size:50px;color:#f29f1b;"></i>
 
-.brand-area{
- display:flex;
- align-items:center;
- gap:10px
-}
+   <h4 id="profPhone"  
+       style="margin-top:8px;"></h4>  <span class="vip-badge"  
+style="display:inline-block;margin-top:4px;">
+VIP 1 MEMBER
+</span>
 
-.vip-badge{
- background:linear-gradient(45deg,#d4af37,#ffd700);
- color:#000;
- padding:3px 8px;
- border-radius:6px;
- font-weight:900;
- font-size:11px;
- box-shadow:0 0 10px rgba(212,175,55,.5)
-}
+  </div>  <button class="modal-submit-btn"  
+style="background:#ef4444;"  
+onclick="logoutUser()">
+লগ আউট (Log Out)
+</button>
 
-.brand-title{
- font-size:20px;
- font-weight:900;
- color:#fff;
- letter-spacing:.5px
-}
+ </div>  
+</div>  <!-- DEPOSIT -->  <div class="modal-overlay" id="depositModal">   <div class="modal-card">  <i class="fa-solid fa-xmark modal-close"  
+onclick="closeModal('depositModal')"></i>
 
-.brand-title span{
- color:#f29f1b
-}
+  <div class="modal-title">  
+   ডিপোজিট করুন  
+  </div>    <div class="form-group">  
+   <label>পেমেন্ট মেথড</label>     <select id="depMethod">  
+    <option>bKash (বিকাশ)</option>  
+    <option>Nagad (নগদ)</option>  
+    <option>Rocket (রকেট)</option>  
+   </select>  
+  </div>    <div class="form-group">  
+   <label>টাকার পরিমাণ (৳)</label>  
+   <input type="number"  
+          id="depAmount"  
+          placeholder="সর্বনিম্ন ৫০০ টাকা">  
+  </div>    <div class="form-group">  
+   <label>ট্রানজেকশন আইডি (TrxID)</label>  
+   <input type="text"  
+          id="depTrx"  
+          placeholder="8N7X6W5Y">  
+  </div>  <button class="modal-submit-btn"  
+onclick="submitDeposit()">
+সাবমিট করুন
+</button>
 
-.user-actions{
- display:flex;
- align-items:center;
- gap:10px
-}
+ </div>  
+</div>  <!-- WITHDRAW -->  <div class="modal-overlay" id="withdrawModal">   <div class="modal-card">  <i class="fa-solid fa-xmark modal-close"  
+onclick="closeModal('withdrawModal')"></i>
 
-.user-wallet{
- background:linear-gradient(135deg,rgba(242,159,27,.15),rgba(255,69,0,.15));
- border:1px solid #f29f1b;
- padding:6px 12px;
- border-radius:20px;
- font-size:13px;
- font-weight:bold;
- color:#ffd700;
- display:flex;
- align-items:center;
- gap:6px
-}
+  <div class="modal-title">  
+   টাকা উইথড্র করুন  
+  </div>    <div class="form-group">  
+   <label>পেমেন্ট মেথড</label>     <select id="wdMethod">  
+    <option>bKash Personal</option>  
+    <option>Nagad Personal</option>  
+   </select>  
+  </div>    <div class="form-group">  
+   <label>আপনার নম্বর</label>  
+   <input type="text"  
+          id="wdPhone"  
+          placeholder="017XXXXXXXX">  
+  </div>    <div class="form-group">  
+   <label>উইথড্র পরিমাণ (৳)</label>  
+   <input type="number"  
+          id="wdAmount"  
+          placeholder="সর্বনিম্ন ১০০০ টাকা">  
+  </div>  <button class="modal-submit-btn"  
+style="background:#f59e0b;"  
+onclick="submitWithdraw()">
+উইথড্র করুন
+</button>
 
-.auth-btn{
- background:#f29f1b;
- color:#000;
- border:none;
- padding:6px 14px;
- border-radius:20px;
- font-weight:800;
- font-size:12px;
- cursor:pointer;
- box-shadow:0 0 10px rgba(242,159,27,.4)
-}
+ </div>  
+</div>  <!-- SUPPORT -->  <div class="modal-overlay" id="supportModal">   <div class="modal-card">  <i class="fa-solid fa-xmark modal-close"  
+onclick="closeModal('supportModal')"></i>
 
-.container{
- max-width:480px;
- margin:0 auto;
- padding:15px
-}
+  <div class="modal-title">  
+   ২৪/৭ লাইভ সাপোর্ট  
+  </div>    <p style="font-size:12px;color:#cbd5e1;text-align:center;margin-bottom:15px;">  
+   যে কোনো সমস্যায় আমাদের অফিশিয়াল চ্যানেলে যোগাযোগ করুন।  
+  </p>  <button class="modal-submit-btn"  
+style="background:#0088cc;"  
+onclick="window.open('https://t.me','_blank')">
+<i class="fa-brands fa-telegram"></i>
+টেলিগ্রাম হেল্পলাইন
+</button>
 
-.notice-wrapper{
- background:rgba(15,23,42,.9);
- border-left:4px solid #f29f1b;
- border-radius:10px;
- padding:10px 14px;
- margin-bottom:15px;
- display:flex;
- align-items:center;
- gap:10px;
- overflow:hidden
-}
+ </div>  
+</div>  <!-- GAME -->  <div class="modal-overlay" id="gameModal">   <div class="modal-card" style="text-align:center;">  <i class="fa-solid fa-xmark modal-close"  
+onclick="closeModal('gameModal')"></i>
 
-.notice-icon{
- color:#f29f1b;
- font-size:16px;
- animation:pulse 1.5s infinite
-}
+  <div class="modal-title" id="gameTitle">  
+   গেম শুরু হচ্ছে  
+  </div>    <div id="gameLoadingState" style="padding:30px 0;">  <i class="fa-solid fa-spinner fa-spin"  
+style="font-size:40px;color:#f29f1b;"></i>
 
-.notice-text{
- font-size:13px;
- color:#e2e8f0;
- white-space:nowrap;
- animation:marquee 14s linear infinite
-}
+   <p style="margin-top:15px;font-size:13px;color:#94a3b8;">  
+    গেম সার্ভার কানেক্ট হচ্ছে...  
+   </p>    </div>    <div id="gameActiveState" style="display:none;">     <div class="game-canvas-area">  <i class="fa-solid fa-plane-departure plane-anim"></i>  
 
-@keyframes marquee{
- 0%{transform:translateX(100%)}
- 100%{transform:translateX(-100%)}
-}
-
-@keyframes pulse{
- 0%,100%{transform:scale(1)}
- 50%{transform:scale(1.2)}
-}
-
-.quick-wallet-actions{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:12px;
- margin-bottom:20px
-}
-
-.wallet-btn{
- padding:12px;
- border-radius:12px;
- border:none;
- font-weight:800;
- font-size:14px;
- cursor:pointer;
- display:flex;
- align-items:center;
- justify-content:center;
- gap:8px
-}
-
-.btn-deposit{
- background:linear-gradient(135deg,#10b981,#059669);
- color:#fff;
- box-shadow:0 4px 15px rgba(16,185,129,.4)
-}
-
-.btn-withdraw{
- background:linear-gradient(135deg,#f59e0b,#d97706);
- color:#fff;
- box-shadow:0 4px 15px rgba(245,158,11,.4)
-}
-
-.promo-card{
- background:linear-gradient(135deg,#2563eb,#1d4ed8);
- border-radius:16px;
- padding:16px;
- margin-bottom:20px;
- position:relative;
- overflow:hidden;
- border:1px solid rgba(255,255,255,.15)
-}
-
-.promo-tag{
- background:#f59e0b;
- color:#000;
- font-size:10px;
- font-weight:900;
- padding:2px 8px;
- border-radius:10px;
- text-transform:uppercase;
- display:inline-block;
- margin-bottom:6px
-}
-
-.promo-title{
- font-size:16px;
- font-weight:900;
- margin-bottom:4px
-}
-
-.promo-desc{
- font-size:11px;
- color:#dbeafe
-}
-
-.filter-chips{
- display:flex;
- gap:8px;
- overflow-x:auto;
- margin-bottom:12px;
- padding-bottom:4px
-}
-
-.chip{
- background:rgba(255,255,255,.05);
- border:1px solid rgba(255,255,255,.1);
- padding:6px 14px;
- border-radius:20px;
- font-size:12px;
- font-weight:bold;
- color:#94a3b8;
- cursor:pointer;
- white-space:nowrap
-}
-
-.chip.active{
- background:#f29f1b;
- color:#000;
- border-color:#f29f1b
-}
-
-.section-card{
- background:rgba(10,20,36,.85);
- border:1px solid rgba(224,130,29,.3);
- border-radius:20px;
- padding:18px;
- margin-bottom:20px
-}
-
-.section-title{
- font-size:13px;
- color:#f29f1b;
- text-transform:uppercase;
- letter-spacing:1px;
- font-weight:800;
- display:flex;
- align-items:center;
- gap:8px
-}
-
-.game-grid{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:12px
-}
-
-.game-card{
- background:rgba(255,255,255,.03);
- border:1px solid rgba(242,159,27,.2);
- border-radius:16px;
- padding:14px 10px;
- text-align:center;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:space-between
-}
-
-.game-card i{
- font-size:32px;
- color:#f29f1b;
- margin-bottom:8px
-}
-
-.game-title{
- font-size:14px;
- font-weight:800;
- color:#fff;
- margin-bottom:10px
-}
-
-.play-btn{
- width:100%;
- background:linear-gradient(135deg,#f29f1b,#d97706);
- color:#000;
- border:none;
- border-radius:20px;
- padding:6px 0;
- font-size:11px;
- font-weight:900;
- cursor:pointer;
- display:flex;
- align-items:center;
- justify-content:center;
- gap:4px
-}
-
-.jackpot-box{
- background:linear-gradient(135deg,#0e1a2e,#172a46);
- border:1.5px solid #ffd700;
- border-radius:18px;
- padding:18px;
- text-align:center;
- margin-bottom:20px
-}
-
-.jackpot-title{
- font-size:13px;
- color:#ffd700;
- font-weight:900;
- letter-spacing:2px
-}
-
-.jackpot-amount{
- font-size:28px;
- font-weight:900;
- color:#00ff88;
- margin:6px 0
-}
-
-.winner-row{
- display:flex;
- justify-content:space-between;
- align-items:center;
- padding:10px 0;
- border-bottom:1px solid rgba(255,255,255,.05);
- font-size:13px
-}
-
-.winner-win{
- color:#00ff88;
- font-weight:bold
-}
-
-.bottom-nav{
- position:fixed;
- bottom:0;
- left:0;
- right:0;
- background:#08111d;
- border-top:1px solid rgba(224,130,29,.3);
- display:flex;
- justify-content:space-around;
- padding:10px 0;
- z-index:100
-}
-
-.nav-link{
- color:#64748b;
- text-decoration:none;
- font-size:11px;
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:4px;
- cursor:pointer
-}
-
-.nav-link.active{
- color:#f29f1b
-}
-
-.modal-overlay{
- position:fixed;
- top:0;
- left:0;
- width:100%;
- height:100%;
- background:rgba(0,0,0,.85);
- display:flex;
- justify-content:center;
- align-items:center;
- z-index:1000;
- opacity:0;
- visibility:hidden;
- transition:all .3s ease;
- padding:20px;
- backdrop-filter:blur(5px)
-}
-
-.modal-overlay.active{
- opacity:1;
- visibility:visible
-}
-
-.modal-card{
- background:#0b1727;
- border:1.5px solid #f29f1b;
- border-radius:20px;
- width:100%;
- max-width:380px;
- padding:20px;
- position:relative
-}
-
-.modal-close{
- position:absolute;
- top:14px;
- right:16px;
- color:#94a3b8;
- font-size:20px;
- cursor:pointer
-}
-
-.modal-title{
- font-size:16px;
- font-weight:800;
- color:#f29f1b;
- margin-bottom:15px;
- text-align:center
-}
-
-.form-group{
- margin-bottom:12px
-}
-
-.form-group label{
- display:block;
- font-size:11px;
- color:#94a3b8;
- margin-bottom:4px
-}
-
-.form-group input,
-.form-group select{
- width:100%;
- background:rgba(255,255,255,.05);
- border:1px solid rgba(255,255,255,.15);
- padding:10px;
- border-radius:10px;
- color:#fff;
- font-size:13px;
- outline:none
-}
-
-.form-group select option{
- background:#0b1727;
- color:#fff
-}
-
-.modal-submit-btn{
- width:100%;
- background:linear-gradient(135deg,#10b981,#059669);
- border:none;
- color:#fff;
- padding:10px;
- border-radius:10px;
- font-weight:bold;
- margin-top:10px;
- cursor:pointer
-}
-
-.game-canvas-area{
- background:#040914;
- border-radius:12px;
- height:180px;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- position:relative;
- overflow:hidden;
- border:1px solid rgba(255,255,255,.1);
- margin-bottom:15px
-}
-
-.plane-anim{
- font-size:35px;
- color:#ef4444;
- position:absolute;
- bottom:20px;
- left:20px;
- animation:flyPlane 3s infinite ease-in-out
-}
-
-@keyframes flyPlane{
- 0%{
-  transform:translate(0,0) rotate(0)
- }
- 50%{
-  transform:translate(120px,-70px) rotate(-15deg)
- }
- 100%{
-  transform:translate(220px,-130px) rotate(-25deg)
- }
-}
-
-.multiplier-text{
- font-size:32px;
- font-weight:900;
- color:#00ff88;
- z-index:2
-}
-</style>
-</head>
-
-<body>
-
-<div class="navbar">
- <div class="brand-area">
-  <span class="vip-badge">VIP 1</span>
-  <div class="brand-title">BDX<span>bet</span></div>
- </div>
-
- <div class="user-actions">
-  <div class="user-wallet">
-   <i class="fa-solid fa-wallet"></i>
-   <span id="userBalance">৳ 0.00</span>
-  </div>
-
-  <button class="auth-btn" id="navAuthBtn" onclick="handleAccountClick()">
-   লগইন
-  </button>
- </div>
+<div class="multiplier-text"  
+     id="multText">  
+ 1.00x  
 </div>
 
-<div class="container">
-
- <div class="notice-wrapper">
-  <i class="fa-solid fa-bullhorn notice-icon"></i>
-  <div class="notice-text">
-   BDXbet-এ স্বাগতম! বিকাশ, নগদ বা রকেটের মাধ্যমে দ্রুত ডিপোজিট করে আজই গেম খেলুন।
-  </div>
- </div>
-
- <div class="quick-wallet-actions">
-  <button class="wallet-btn btn-deposit" onclick="openModal('depositModal')">
-   <i class="fa-solid fa-circle-plus"></i>
-   DEPOSIT
-  </button>
-
-  <button class="wallet-btn btn-withdraw" onclick="openModal('withdrawModal')">
-   <i class="fa-solid fa-money-bill-transfer"></i>
-   WITHDRAW
-  </button>
- </div>
-
- <div class="promo-card">
-  <span class="promo-tag">WELCOME BONUS</span>
-  <div class="promo-title">100% Cash Match Bonus!</div>
-  <div class="promo-desc">
-   আজই প্রথম ডিপোজিটে পান সমপরিমাণ ফ্রি বোনাস ক্যাশ।
-  </div>
- </div>
-
- <div class="section-card">
-
-  <div class="section-title" style="margin-bottom:10px;">
-   <i class="fa-solid fa-fire" style="color:#ff4500;"></i>
-   POPULAR CATEGORIES
-  </div>
-
-  <div class="filter-chips">
-   <div class="chip active" onclick="filterCategory('all',this)">
-    All Games
-   </div>
-
-   <div class="chip" onclick="filterCategory('sports',this)">
-    Sports
-   </div>
-
-   <div class="chip" onclick="filterCategory('betting',this)">
-    Betting
-   </div>
-
-   <div class="chip" onclick="filterCategory('slots',this)">
-    Slots
-   </div>
-  </div>
-
-  <div class="game-grid" id="gameGrid">
-
-   <div class="game-card" data-category="sports">
-    <i class="fa-solid fa-baseball-bat-ball"></i>
-    <div class="game-title">Cricket</div>
-    <button class="play-btn" onclick="startPlayGame('Cricket')">
-     <i class="fa-solid fa-play"></i>
-     গেম খেলুন
-    </button>
-   </div>
-
-   <div class="game-card" data-category="sports">
-    <i class="fa-solid fa-futbol"></i>
-    <div class="game-title">Football</div>
-    <button class="play-btn" onclick="startPlayGame('Football')">
-     <i class="fa-solid fa-play"></i>
-     গেম খেলুন
-    </button>
-   </div>
-
-   <div class="game-card" data-category="slots">
-    <i class="fa-solid fa-gamepad"></i>
-    <div class="game-title">Ludo</div>
-    <button class="play-btn" onclick="startPlayGame('Ludo')">
-     <i class="fa-solid fa-play"></i>
-     গেম খেলুন
-    </button>
-   </div>
-
-   <div class="game-card" data-category="betting">
-    <i class="fa-solid fa-plane-departure"></i>
-    <div class="game-title">Aviator</div>
-    <button class="play-btn" onclick="startPlayGame('Aviator')">
-     <i class="fa-solid fa-play"></i>
-     গেম খেলুন
-    </button>
-   </div>
-
-  </div>
- </div>
-
- <div class="jackpot-box">
-  <div class="jackpot-title">
-   🔥 DAILY MEGA JACKPOT 🔥
-  </div>
-
-  <div class="jackpot-amount" id="jackpot">
-   ৳ 1,450,720
-  </div>
-
-  <div style="font-size:11px;color:#94a3b8;">
-   Draw starts in: 04h 12m 30s
-  </div>
- </div>
-
- <div class="section-card">
-
-  <div class="section-title" style="margin-bottom:12px;">
-   <i class="fa-solid fa-trophy" style="color:#ffd700;"></i>
-   LIVE WINNERS FEED
-  </div>
-
-  <div class="winner-row">
-   <div>
-    <i class="fa-solid fa-circle-user"></i>
-    User ***9012
-   </div>
-
-   <div class="winner-win">
-    + ৳ 5,400
-   </div>
-  </div>
-
-  <div class="winner-row">
-   <div>
-    <i class="fa-solid fa-circle-user"></i>
-    User ***4431
-   </div>
-
-   <div class="winner-win">
-    + ৳ 12,000
-   </div>
-  </div>
-
- </div>
-</div>
-
-<div class="bottom-nav">
-
- <div class="nav-link active">
-  <i class="fa-solid fa-house"></i>
-  <span>Home</span>
- </div>
-
- <div class="nav-link" onclick="startPlayGame('All Games')">
-  <i class="fa-solid fa-gamepad"></i>
-  <span>Games</span>
- </div>
-
- <div class="nav-link" onclick="openModal('supportModal')">
-  <i class="fa-solid fa-headset"></i>
-  <span>Support</span>
- </div>
-
- <div class="nav-link" onclick="handleAccountClick()">
-  <i class="fa-solid fa-user"></i>
-  <span>Account</span>
- </div>
-
-</div>
-
-
-<!-- LOGIN -->
-<div class="modal-overlay" id="authModal">
-
- <div class="modal-card">
-
-  <i class="fa-solid fa-xmark modal-close"
-     onclick="closeModal('authModal')"></i>
-
-  <div class="modal-title">
-   ইউজার লগইন / রেজিস্ট্রেশন
-  </div>
-
-  <div class="form-group">
-   <label>মোবাইল নম্বর</label>
-   <input type="text"
-          id="loginPhone"
-          placeholder="017XXXXXXXX">
-  </div>
-
-  <div class="form-group">
-   <label>পাসওয়ার্ড</label>
-   <input id="loginPassword"
-          type="password"
-          placeholder="******">
-  </div>
-
-  <button class="modal-submit-btn"
-          onclick="submitLogin()">
-   লগইন করুন
-  </button>
-
- </div>
-</div>
-
-
-<!-- PROFILE -->
-<div class="modal-overlay" id="profileModal">
-
- <div class="modal-card">
-
-  <i class="fa-solid fa-xmark modal-close"
-     onclick="closeModal('profileModal')"></i>
-
-  <div class="modal-title" style="color:#00ff88;">
-   <i class="fa-solid fa-user-shield"></i>
-   ইউজার প্রোফাইল
-  </div>
-
-  <div style="text-align:center;padding:10px 0;">
-
-   <i class="fa-solid fa-circle-user"
-      style="font-size:50px;color:#f29f1b;"></i>
-
-   <h4 id="profPhone"
-       style="margin-top:8px;"></h4>
-
-   <span class="vip-badge"
-         style="display:inline-block;margin-top:4px;">
-    VIP 1 MEMBER
-   </span>
-
-  </div>
-
-  <button class="modal-submit-btn"
-          style="background:#ef4444;"
-          onclick="logoutUser()">
-   লগ আউট (Log Out)
-  </button>
-
- </div>
-</div>
-
-
-<!-- DEPOSIT -->
-<div class="modal-overlay" id="depositModal">
-
- <div class="modal-card">
-
-  <i class="fa-solid fa-xmark modal-close"
-     onclick="closeModal('depositModal')"></i>
-
-  <div class="modal-title">
-   ডিপোজিট করুন
-  </div>
-
-  <div class="form-group">
-   <label>পেমেন্ট মেথড</label>
-
-   <select id="depMethod">
-    <option>bKash (বিকাশ)</option>
-    <option>Nagad (নগদ)</option>
-    <option>Rocket (রকেট)</option>
-   </select>
-  </div>
-
-  <div class="form-group">
-   <label>টাকার পরিমাণ (৳)</label>
-   <input type="number"
-          id="depAmount"
-          placeholder="সর্বনিম্ন ৫০০ টাকা">
-  </div>
-
-  <div class="form-group">
-   <label>ট্রানজেকশন আইডি (TrxID)</label>
-   <input type="text"
-          id="depTrx"
-          placeholder="8N7X6W5Y">
-  </div>
-
-  <button class="modal-submit-btn"
-          onclick="submitDeposit()">
-   সাবমিট করুন
-  </button>
-
- </div>
-</div>
-
-
-<!-- WITHDRAW -->
-<div class="modal-overlay" id="withdrawModal">
-
- <div class="modal-card">
-
-  <i class="fa-solid fa-xmark modal-close"
-     onclick="closeModal('withdrawModal')"></i>
-
-  <div class="modal-title">
-   টাকা উইথড্র করুন
-  </div>
-
-  <div class="form-group">
-   <label>পেমেন্ট মেথড</label>
-
-   <select id="wdMethod">
-    <option>bKash Personal</option>
-    <option>Nagad Personal</option>
-   </select>
-  </div>
-
-  <div class="form-group">
-   <label>আপনার নম্বর</label>
-   <input type="text"
-          id="wdPhone"
-          placeholder="017XXXXXXXX">
-  </div>
-
-  <div class="form-group">
-   <label>উইথড্র পরিমাণ (৳)</label>
-   <input type="number"
-          id="wdAmount"
-          placeholder="সর্বনিম্ন ১০০০ টাকা">
-  </div>
-
-  <button class="modal-submit-btn"
-          style="background:#f59e0b;"
-          onclick="submitWithdraw()">
-   উইথড্র করুন
-  </button>
-
- </div>
-</div>
-
-
-<!-- SUPPORT -->
-<div class="modal-overlay" id="supportModal">
-
- <div class="modal-card">
-
-  <i class="fa-solid fa-xmark modal-close"
-     onclick="closeModal('supportModal')"></i>
-
-  <div class="modal-title">
-   ২৪/৭ লাইভ সাপোর্ট
-  </div>
-
-  <p style="font-size:12px;color:#cbd5e1;text-align:center;margin-bottom:15px;">
-   যে কোনো সমস্যায় আমাদের অফিশিয়াল চ্যানেলে যোগাযোগ করুন।
-  </p>
-
-  <button class="modal-submit-btn"
-          style="background:#0088cc;"
-          onclick="window.open('https://t.me','_blank')">
-   <i class="fa-brands fa-telegram"></i>
-   টেলিগ্রাম হেল্পলাইন
-  </button>
-
- </div>
-</div>
-
-
-<!-- GAME -->
-<div class="modal-overlay" id="gameModal">
-
- <div class="modal-card" style="text-align:center;">
-
-  <i class="fa-solid fa-xmark modal-close"
-     onclick="closeModal('gameModal')"></i>
-
-  <div class="modal-title" id="gameTitle">
-   গেম শুরু হচ্ছে
-  </div>
-
-  <div id="gameLoadingState" style="padding:30px 0;">
-
-   <i class="fa-solid fa-spinner fa-spin"
-      style="font-size:40px;color:#f29f1b;"></i>
-
-   <p style="margin-top:15px;font-size:13px;color:#94a3b8;">
-    গেম সার্ভার কানেক্ট হচ্ছে...
-   </p>
-
-  </div>
-
-  <div id="gameActiveState" style="display:none;">
-
-   <div class="game-canvas-area">
-
-    <i class="fa-solid fa-plane-departure plane-anim"></i>
-
-    <div class="multiplier-text"
-         id="multText">
-     1.00x
-    </div>
-
-   </div>
-
-   <button class="play-btn"
-           style="font-size:14px;padding:10px 0;"
-           onclick="alert('ডেমো ক্যাশ আউট!')">
-    💰 CASHOUT NOW
-   </button>
-
-  </div>
-
- </div>
-</div>
-
-
-<script>
-
-let isLoggedIn=false,
-    currentUser=null,
-    currentUserPhone="";
-
-
-function openModal(id){
- const modal=document.getElementById(id);
- if(modal){
-  modal.classList.add('active');
- }
-}
-
-
-function closeModal(id){
- const modal=document.getElementById(id);
- if(modal){
-  modal.classList.remove('active');
- }
-}
-
-
-function filterCategory(cat,el){
-
- document.querySelectorAll('.chip')
- .forEach(c=>c.classList.remove('active'));
-
- el.classList.add('active');
-
- document.querySelectorAll('.game-card')
- .forEach(card=>{
-
-  card.style.display=
-   (cat==='all'||card.dataset.category===cat)
-   ?'flex'
-   :'none';
-
- });
-}
-
-
-async function api(url,options={}){
-
- const r=await fetch(url,{
-  credentials:'include',
-  headers:{
-   'Content-Type':'application/json',
-   ...(options.headers||{})
-  },
-  ...options
- });
-
- let d={};
-
- try{
-  d=await r.json();
- }catch(e){}
-
- if(!r.ok){
-  throw new Error(d.message||'Server error');
- }
-
- return d;
-}
-
-
-function setLoggedIn(user){
-
- isLoggedIn=true;
- currentUser=user;
- currentUserPhone=user.phone||'';
-
- document.getElementById('navAuthBtn').innerText='প্রোফাইল';
-
- document.getElementById('profPhone').innerText=
-  user.phone||'';
-
- document.getElementById('userBalance').innerText=
-  '৳ '+
-  Number(user.balance||0)
-  .toLocaleString('en-BD',{
-   minimumFractionDigits:2,
-   maximumFractionDigits:2
-  });
-}
-
-
-function setLoggedOut(){
-
- isLoggedIn=false;
- currentUser=null;
- currentUserPhone='';
-
- document.getElementById('navAuthBtn').innerText='লগইন';
-
- document.getElementById('userBalance').innerText=
-  '৳ 0.00';
-}
-
-
-async function loadCurrentUser(){
-
- try{
-
-  const d=await api('/api/me');
-
-  if(d.success){
-   setLoggedIn(d.user);
-  }else{
-   setLoggedOut();
-  }
-
- }catch(e){
-
-  setLoggedOut();
-
- }
-}
-
-
-function handleAccountClick(){
-
- if(isLoggedIn){
-
-  document.getElementById('profPhone').innerText=
-   currentUserPhone;
-
-  openModal('profileModal');
-
- }else{
-
-  openModal('authModal');
-
- }
-}
-
-
-async function submitLogin(){
-
- const phone=
-  document.getElementById('loginPhone')
-  .value
-  .trim();
-
- const password=
-  document.getElementById('loginPassword')
-  .value;
-
- if(!phone){
-  alert('মোবাইল নম্বর দিন!');
-  return;
- }
-
- if(!password){
-  alert('পাসওয়ার্ড দিন!');
-  return;
- }
-
- try{
-
-  const d=await api('/api/login',{
-   method:'POST',
-   body:JSON.stringify({
-    phone,
-    password
-   })
-  });
-
-  if(!d.success){
-   throw new Error(d.message||'লগইন ব্যর্থ হয়েছে');
-  }
-
-  setLoggedIn(d.user);
-
-  closeModal('authModal');
-
-  alert('লগইন হয়েছে!');
-
- }catch(e){
-
-  alert(e.message||'লগইন করা যায়নি');
-
- }
-}
-
-
-async function logoutUser(){
-
- try{
-
-  await api('/api/logout',{
-   method:'POST'
-  });
-
- }catch(e){}
-
- setLoggedOut();
-
- closeModal('profileModal');
-
- alert('লগ আউট হয়েছে');
-}
-
-
-async function submitDeposit(){
-
- if(!isLoggedIn){
-
-  closeModal('depositModal');
-  openModal('authModal');
-
-  return;
- }
-
- const method=
-  document.getElementById('depMethod').value;
-
- const amount=
-  document.getElementById('depAmount').value;
-
- const trxId=
-  document.getElementById('depTrx')
-  .value
-  .trim();
-
- if(!amount){
-  alert('টাকার পরিমাণ দিন!');
-  return;
- }
-
- if(Number(amount)<=0){
-  alert('সঠিক টাকার পরিমাণ দিন!');
-  return;
- }
-
- if(!trxId){
-  alert('Transaction ID দিন!');
-  return;
- }
-
- try{
-
-  const d=await api('/api/deposit',{
-   method:'POST',
-   body:JSON.stringify({
-    method,
-    amount:Number(amount),
-    trxId
-   })
-  });
-
-  closeModal('depositModal');
-
-  document.getElementById('depAmount').value='';
-  document.getElementById('depTrx').value='';
-
-  alert(d.message||'ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে');
-
- }catch(e){
-
-  alert(e.message||'ডিপোজিট করা যায়নি');
-
- }
-}
-
-
-async function submitWithdraw(){
-
- if(!isLoggedIn){
-
-  closeModal('withdrawModal');
-  openModal('authModal');
-
-  return;
- }
-
- const method=
-  document.getElementById('wdMethod').value;
-
- const phone=
-  document.getElementById('wdPhone')
-  .value
-  .trim();
-
- const amount=
-  document.getElementById('wdAmount').value;
-
- if(!phone){
-  alert('আপনার নম্বর দিন!');
-  return;
- }
-
- if(!amount){
-  alert('উইথড্র পরিমাণ দিন!');
-  return;
- }
-
- if(Number(amount)<=0){
-  alert('সঠিক উইথড্র পরিমাণ দিন!');
-  return;
- }
-
- try{
-
-  const d=await api('/api/withdraw',{
-   method:'POST',
-   body:JSON.stringify({
-    method,
-    phone,
-    amount:Number(amount)
-   })
-  });
-
-  closeModal('withdrawModal');
-
-  document.getElementById('wdPhone').value='';
-  document.getElementById('wdAmount').value='';
-
-  alert(d.message||'উইথড্র রিকোয়েস্ট পাঠানো হয়েছে');
-
- }catch(e){
-
-  alert(e.message||'উইথড্র করা যায়নি');
-
- }
-}
-
-
-function startPlayGame(name){
-
- document.getElementById('gameTitle').innerText=
-  name+' গেম';
-
- document.getElementById('gameLoadingState')
- .style.display='block';
-
- document.getElementById('gameActiveState')
- .style.display='none';
-
- openModal('gameModal');
-
- setTimeout(()=>{
-
-  document.getElementById('gameLoadingState')
-  .style.display='none';
-
-  document.getElementById('gameActiveState')
-  .style.display='block';
-
-  runMultiplierEffect();
-
- },2000);
-}
-
-
-function runMultiplierEffect(){
-
- let mult=1;
-
- document.getElementById('multText').innerText='1.00x';
-
- const interval=setInterval(()=>{
-
-  mult+=.05;
-
-  document.getElementById('multText').innerText=
-   mult.toFixed(2)+'x';
-
-  if(mult>=3){
-   clearInterval(interval);
-  }
-
- },200);
-
-}
-
-
-let baseJackpot=1450720;
-
-setInterval(()=>{
-
- baseJackpot+=
-  Math.floor(Math.random()*50)+1;
-
- document.getElementById('jackpot').innerText=
-  '৳ '+baseJackpot.toLocaleString();
-
-},2000);
-
-
-document.addEventListener(
- 'DOMContentLoaded',
- loadCurrentUser
-);
-
-
-document.querySelectorAll('.modal-overlay')
-.forEach(m=>{
-
- m.addEventListener('click',e=>{
-
-  if(e.target===m){
-   m.classList.remove('active');
-  }
-
- });
-
-});
-
-</script>
-
-</body>
-</html>
+   </div>  <button class="play-btn"  
+style="font-size:14px;padding:10px 0;"  
+onclick="alert('ডেমো ক্যাশ আউট!')">
+💰 CASHOUT NOW
+</button>
+
+  </div>   </div>  
+</div>  <script>  
+  
+let isLoggedIn=false,  
+    currentUser=null,  
+    currentUserPhone="";  
+  
+  
+function openModal(id){  
+ const modal=document.getElementById(id);  
+ if(modal){  
+  modal.classList.add('active');  
+ }  
+}  
+  
+  
+function closeModal(id){  
+ const modal=document.getElementById(id);  
+ if(modal){  
+  modal.classList.remove('active');  
+ }  
+}  
+  
+  
+function filterCategory(cat,el){  
+  
+ document.querySelectorAll('.chip')  
+ .forEach(c=>c.classList.remove('active'));  
+  
+ el.classList.add('active');  
+  
+ document.querySelectorAll('.game-card')  
+ .forEach(card=>{  
+  
+  card.style.display=  
+   (cat==='all'||card.dataset.category===cat)  
+   ?'flex'  
+   :'none';  
+  
+ });  
+}  
+  
+  
+async function api(url,options={}){  
+  
+ const r=await fetch(url,{  
+  credentials:'include',  
+  headers:{  
+   'Content-Type':'application/json',  
+   ...(options.headers||{})  
+  },  
+  ...options  
+ });  
+  
+ let d={};  
+  
+ try{  
+  d=await r.json();  
+ }catch(e){}  
+  
+ if(!r.ok){  
+  throw new Error(d.message||'Server error');  
+ }  
+  
+ return d;  
+}  
+  
+  
+function setLoggedIn(user){  
+  
+ isLoggedIn=true;  
+ currentUser=user;  
+ currentUserPhone=user.phone||'';  
+  
+ document.getElementById('navAuthBtn').innerText='প্রোফাইল';  
+  
+ document.getElementById('profPhone').innerText=  
+  user.phone||'';  
+  
+ document.getElementById('userBalance').innerText=  
+  '৳ '+  
+  Number(user.balance||0)  
+  .toLocaleString('en-BD',{  
+   minimumFractionDigits:2,  
+   maximumFractionDigits:2  
+  });  
+}  
+  
+  
+function setLoggedOut(){  
+  
+ isLoggedIn=false;  
+ currentUser=null;  
+ currentUserPhone='';  
+  
+ document.getElementById('navAuthBtn').innerText='লগইন';  
+  
+ document.getElementById('userBalance').innerText=  
+  '৳ 0.00';  
+}  
+  
+  
+async function loadCurrentUser(){  
+  
+ try{  
+  
+  const d=await api('/api/me');  
+  
+  if(d.success){  
+   setLoggedIn(d.user);  
+  }else{  
+   setLoggedOut();  
+  }  
+  
+ }catch(e){  
+  
+  setLoggedOut();  
+  
+ }  
+}  
+  
+  
+function handleAccountClick(){  
+  
+ if(isLoggedIn){  
+  
+  document.getElementById('profPhone').innerText=  
+   currentUserPhone;  
+  
+  openModal('profileModal');  
+  
+ }else{  
+  
+  openModal('authModal');  
+  
+ }  
+}  
+  
+  
+async function submitLogin(){  
+  
+ const phone=  
+  document.getElementById('loginPhone')  
+  .value  
+  .trim();  
+  
+ const password=  
+  document.getElementById('loginPassword')  
+  .value;  
+  
+ if(!phone){  
+  alert('মোবাইল নম্বর দিন!');  
+  return;  
+ }  
+  
+ if(!password){  
+  alert('পাসওয়ার্ড দিন!');  
+  return;  
+ }  
+  
+ try{  
+  
+  const d=await api('/api/login',{  
+   method:'POST',  
+   body:JSON.stringify({  
+    phone,  
+    password  
+   })  
+  });  
+  
+  if(!d.success){  
+   throw new Error(d.message||'লগইন ব্যর্থ হয়েছে');  
+  }  
+  
+  setLoggedIn(d.user);  
+  
+  closeModal('authModal');  
+  
+  alert('লগইন হয়েছে!');  
+  
+ }catch(e){  
+  
+  alert(e.message||'লগইন করা যায়নি');  
+  
+ }  
+}  
+  
+  
+async function logoutUser(){  
+  
+ try{  
+  
+  await api('/api/logout',{  
+   method:'POST'  
+  });  
+  
+ }catch(e){}  
+  
+ setLoggedOut();  
+  
+ closeModal('profileModal');  
+  
+ alert('লগ আউট হয়েছে');  
+}  
+  
+  
+async function submitDeposit(){  
+  
+ if(!isLoggedIn){  
+  
+  closeModal('depositModal');  
+  openModal('authModal');  
+  
+  return;  
+ }  
+  
+ const method=  
+  document.getElementById('depMethod').value;  
+  
+ const amount=  
+  document.getElementById('depAmount').value;  
+  
+ const trxId=  
+  document.getElementById('depTrx')  
+  .value  
+  .trim();  
+  
+ if(!amount){  
+  alert('টাকার পরিমাণ দিন!');  
+  return;  
+ }  
+  
+ if(Number(amount)<=0){  
+  alert('সঠিক টাকার পরিমাণ দিন!');  
+  return;  
+ }  
+  
+ if(!trxId){  
+  alert('Transaction ID দিন!');  
+  return;  
+ }  
+  
+ try{  
+  
+  const d=await api('/api/deposit',{  
+   method:'POST',  
+   body:JSON.stringify({  
+    method,  
+    amount:Number(amount),  
+    trxId  
+   })  
+  });  
+  
+  closeModal('depositModal');  
+  
+  document.getElementById('depAmount').value='';  
+  document.getElementById('depTrx').value='';  
+  
+  alert(d.message||'ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে');  
+  
+ }catch(e){  
+  
+  alert(e.message||'ডিপোজিট করা যায়নি');  
+  
+ }  
+}  
+  
+  
+async function submitWithdraw(){  
+  
+ if(!isLoggedIn){  
+  
+  closeModal('withdrawModal');  
+  openModal('authModal');  
+  
+  return;  
+ }  
+  
+ const method=  
+  document.getElementById('wdMethod').value;  
+  
+ const phone=  
+  document.getElementById('wdPhone')  
+  .value  
+  .trim();  
+  
+ const amount=  
+  document.getElementById('wdAmount').value;  
+  
+ if(!phone){  
+  alert('আপনার নম্বর দিন!');  
+  return;  
+ }  
+  
+ if(!amount){  
+  alert('উইথড্র পরিমাণ দিন!');  
+  return;  
+ }  
+  
+ if(Number(amount)<=0){  
+  alert('সঠিক উইথড্র পরিমাণ দিন!');  
+  return;  
+ }  
+  
+ try{  
+  
+  const d=await api('/api/withdraw',{  
+   method:'POST',  
+   body:JSON.stringify({  
+    method,  
+    phone,  
+    amount:Number(amount)  
+   })  
+  });  
+  
+  closeModal('withdrawModal');  
+  
+  document.getElementById('wdPhone').value='';  
+  document.getElementById('wdAmount').value='';  
+  
+  alert(d.message||'উইথড্র রিকোয়েস্ট পাঠানো হয়েছে');  
+  
+ }catch(e){  
+  
+  alert(e.message||'উইথড্র করা যায়নি');  
+  
+ }  
+}  
+  
+  
+function startPlayGame(name){  
+  
+ document.getElementById('gameTitle').innerText=  
+  name+' গেম';  
+  
+ document.getElementById('gameLoadingState')  
+ .style.display='block';  
+  
+ document.getElementById('gameActiveState')  
+ .style.display='none';  
+  
+ openModal('gameModal');  
+  
+ setTimeout(()=>{  
+  
+  document.getElementById('gameLoadingState')  
+  .style.display='none';  
+  
+  document.getElementById('gameActiveState')  
+  .style.display='block';  
+  
+  runMultiplierEffect();  
+  
+ },2000);  
+}  
+  
+  
+function runMultiplierEffect(){  
+  
+ let mult=1;  
+  
+ document.getElementById('multText').innerText='1.00x';  
+  
+ const interval=setInterval(()=>{  
+  
+  mult+=.05;  
+  
+  document.getElementById('multText').innerText=  
+   mult.toFixed(2)+'x';  
+  
+  if(mult>=3){  
+   clearInterval(interval);  
+  }  
+  
+ },200);  
+  
+}  
+  
+  
+let baseJackpot=1450720;  
+  
+setInterval(()=>{  
+  
+ baseJackpot+=  
+  Math.floor(Math.random()*50)+1;  
+  
+ document.getElementById('jackpot').innerText=  
+  '৳ '+baseJackpot.toLocaleString();  
+  
+},2000);  
+  
+  
+document.addEventListener(  
+ 'DOMContentLoaded',  
+ loadCurrentUser  
+);  
+  
+  
+document.querySelectorAll('.modal-overlay')  
+.forEach(m=>{  
+  
+ m.addEventListener('click',e=>{  
+  
+  if(e.target===m){  
+   m.classList.remove('active');  
+  }  
+  
+ });  
+  
+});  
+  
+</script>  </body>  
+</html>  
+Thik koro vai kono code jeno nosto na hoi ar sarver korte jeno kono poblem na hoi
