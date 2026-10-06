@@ -155,7 +155,7 @@ def serve_page(filename):
         f"{filename} পাওয়া যায়নি। File টা templates/ folder এ আছে কিনা দেখুন।",
         404,
     )
-
+@app.route("/index.html")
 
 @app.route("/")
 def index():
