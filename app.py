@@ -1,7 +1,14 @@
 from flask import Flask, request, jsonify, session, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3, os, secrets, re
+import sqlite3
+import os
+import secrets
+import re
 from functools import wraps
+
+# =========================
+# APP CONFIG
+# =========================
 
 app = Flask(__name__)
 
@@ -120,7 +127,7 @@ def required(fn):
 
 
 # =========================
-# PAGE ROUTES
+# MAIN WEBSITE
 # =========================
 
 @app.route("/")
@@ -131,12 +138,9 @@ def index():
     )
 
 
-# IMPORTANT:
-# Dashboard Ludo button:
-# window.location.href='shuvoludo.html'
-#
-# এই route-এর মাধ্যমে Flask
-# shuvoludo.html serve করবে।
+# =========================
+# LUDO PAGE
+# =========================
 
 @app.route("/shuvoludo.html")
 def ludo():
@@ -194,8 +198,7 @@ def register():
 
     uid = make_uid(db)
 
-    db.execute(
-        """
+    db.execute("""
         INSERT INTO users(
             uid,
             phone,
@@ -205,14 +208,12 @@ def register():
             bonus
         )
         VALUES(?,?,?,?,0,100)
-        """,
-        (
-            uid,
-            phone,
-            generate_password_hash(password),
-            name
-        )
-    )
+    """, (
+        uid,
+        phone,
+        generate_password_hash(password),
+        name
+    ))
 
     db.commit()
 
@@ -334,11 +335,7 @@ def balance():
     db = get_db()
 
     u = db.execute(
-        """
-        SELECT balance, bonus
-        FROM users
-        WHERE id=?
-        """,
+        "SELECT balance,bonus FROM users WHERE id=?",
         (session["user_id"],)
     ).fetchone()
 
@@ -346,8 +343,7 @@ def balance():
 
     if not u:
         return jsonify(
-            success=False,
-            message="User not found"
+            success=False
         ), 404
 
     return jsonify(
@@ -379,7 +375,7 @@ def deposit():
         amount = float(
             d.get("amount", 0)
         )
-    except (TypeError, ValueError):
+    except:
         amount = 0
 
     if amount < 500:
@@ -409,8 +405,7 @@ def deposit():
             message="User not found"
         ), 404
 
-    db.execute(
-        """
+    db.execute("""
         INSERT INTO transactions(
             uid,
             type,
@@ -419,14 +414,12 @@ def deposit():
             trx_id
         )
         VALUES(?,'deposit',?,?,?)
-        """,
-        (
-            u["uid"],
-            amount,
-            method,
-            trx
-        )
-    )
+    """, (
+        u["uid"],
+        amount,
+        method,
+        trx
+    ))
 
     db.commit()
     db.close()
@@ -459,7 +452,7 @@ def withdraw():
         amount = float(
             d.get("amount", 0)
         )
-    except (TypeError, ValueError):
+    except:
         amount = 0
 
     if amount < 1000:
@@ -476,14 +469,13 @@ def withdraw():
 
     db = get_db()
 
-    u = db.execute(
-        """
-        SELECT uid, balance
+    u = db.execute("""
+        SELECT uid,balance
         FROM users
         WHERE id=?
-        """,
-        (session["user_id"],)
-    ).fetchone()
+    """, (
+        session["user_id"],
+    )).fetchone()
 
     if not u:
         db.close()
@@ -493,7 +485,7 @@ def withdraw():
             message="User not found"
         ), 404
 
-    if float(u["balance"] or 0) < amount:
+    if float(u["balance"]) < amount:
         db.close()
 
         return jsonify(
@@ -501,8 +493,7 @@ def withdraw():
             message="পর্যাপ্ত balance নেই"
         ), 400
 
-    db.execute(
-        """
+    db.execute("""
         INSERT INTO transactions(
             uid,
             type,
@@ -511,21 +502,19 @@ def withdraw():
             trx_id
         )
         VALUES(?,'withdraw',?,?,?)
-        """,
-        (
-            u["uid"],
-            amount,
-            method,
-            phone
-        )
-    )
+    """, (
+        u["uid"],
+        amount,
+        method,
+        phone
+    ))
 
     db.commit()
     db.close()
 
     return jsonify(
         success=True,
-        message="উইথড্র রিকোয়েস্ট পাঠানো হয়েছে!"
+        message="উইথড্র রিকোয়েস্ট পাঠানো হয়েছে!"
     )
 
 
@@ -539,14 +528,13 @@ def find_user(uid):
 
     db = get_db()
 
-    u = db.execute(
-        """
-        SELECT uid, name
+    u = db.execute("""
+        SELECT uid,name
         FROM users
         WHERE uid=?
-        """,
-        (uid.strip().upper(),)
-    ).fetchone()
+    """, (
+        uid.strip().upper(),
+    )).fetchone()
 
     db.close()
 
@@ -566,24 +554,21 @@ def find_user(uid):
 
 
 # =========================
-# INITIALIZE DATABASE
+# DATABASE INITIALIZE
 # =========================
 
-# Render/Gunicorn-এর মতো server ব্যবহার করলেও
-# database table তৈরি থাকবে।
 init_db()
 
 
 # =========================
-# LOCAL SERVER
+# LOCAL RUN
 # =========================
 
 if __name__ == "__main__":
-
     app.run(
         host="0.0.0.0",
         port=int(
             os.environ.get("PORT", 5000)
         ),
         debug=False
-    )
+        )
